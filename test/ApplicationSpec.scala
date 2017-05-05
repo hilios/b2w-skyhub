@@ -2,41 +2,25 @@ import org.scalatestplus.play._
 import play.api.test._
 import play.api.test.Helpers._
 
-/**
- * Add your spec here.
- * You can mock out a whole application including requests, plugins etc.
- * For more information, consult the wiki.
- */
 class ApplicationSpec extends PlaySpec with OneAppPerTest {
 
-  "Routes" should {
-
-    "send 404 on a bad request" in  {
-      route(app, FakeRequest(GET, "/boum")).map(status(_)) mustBe Some(NOT_FOUND)
-    }
-
-  }
-
-  "HomeController" should {
-
-    "render the index page" in {
-      val home = route(app, FakeRequest(GET, "/")).get
+  "OpsController" should {
+    "render the version" in {
+      val home = route(app, FakeRequest(GET, "/ops")).get
 
       status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("Your new application is ready.")
+      contentType(home) mustBe Some("application/json")
+      contentAsString(home) must include ("version")
     }
-
   }
 
-  "CountController" should {
+  "ErrorHandler" should {
+    "send not found on a bad request" in  {
+      val error = route(app, FakeRequest(GET, "/bad")).get
 
-    "return an increasing count" in {
-      contentAsString(route(app, FakeRequest(GET, "/count")).get) mustBe "0"
-      contentAsString(route(app, FakeRequest(GET, "/count")).get) mustBe "1"
-      contentAsString(route(app, FakeRequest(GET, "/count")).get) mustBe "2"
+      status(error) mustBe NOT_FOUND
+      contentType(error) mustBe Some("application/json")
+      contentAsString(error) must include ("error")
     }
-
   }
-
 }
