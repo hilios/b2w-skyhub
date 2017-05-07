@@ -5,8 +5,8 @@ import javax.inject._
 import actors.ImageProcessor.Fetch
 import akka.actor.ActorRef
 import dao.ImagesDAO
-import models.Envelope
-import play.api.libs.json.Json
+import models.{Envelope, Image}
+import play.api.libs.json._
 import play.api.mvc._
 import services.ImagesService
 
@@ -19,7 +19,7 @@ class ImagesController @Inject()(@Named("image-processor") processor: ActorRef,
 
   def read = Action.async {
     imagesDAO.findAll().map { images =>
-      val results = Envelope(images, images.length)
+      val results = Envelope(images)
       Ok(Json.toJson(results))
     }
   }

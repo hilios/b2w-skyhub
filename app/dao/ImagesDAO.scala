@@ -3,7 +3,7 @@ package dao
 import javax.inject._
 
 import models.Image
-import org.mongodb.scala.MongoCollection
+import org.mongodb.scala._
 import org.mongodb.scala.model.Filters._
 import services.MongoService
 

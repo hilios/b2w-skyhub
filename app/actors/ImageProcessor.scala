@@ -11,7 +11,8 @@ import services.ImagesService
 
 import scala.concurrent.duration._
 
-class ImageProcessor @Inject()(images: ImagesService, imagesDAO: ImagesDAO) extends Actor {
+class ImageProcessor @Inject()(images: ImagesService,
+                               imagesDAO: ImagesDAO) extends Actor with ActorLogging {
   import ImageProcessor._
   import Thumbinator._
   import context.dispatcher
@@ -21,7 +22,7 @@ class ImageProcessor @Inject()(images: ImagesService, imagesDAO: ImagesDAO) exte
 
   def receive = {
     case Fetch(url) =>
-      println(s"Processing $url")
+      log.info(s"Fetching image: $url")
       for {
         _ <- imagesDAO.findByUrl(url)
         image <- images.load(url)
@@ -29,7 +30,7 @@ class ImageProcessor @Inject()(images: ImagesService, imagesDAO: ImagesDAO) exte
         lg <- (thumb ? Large(image)).mapTo[Array[Byte]]
         md <- (thumb ? Medium(image)).mapTo[Array[Byte]]
       } yield {
-        println(s"Inserting $url")
+        log.info(s"Insert new image for $url")
         val img = Image(url, sm, md, lg)
         imagesDAO.insert(img)
       }

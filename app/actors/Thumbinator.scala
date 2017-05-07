@@ -2,11 +2,14 @@ package actors
 
 import akka.actor._
 import akka.util.ByteString
+import com.sksamuel.scrimage.Image
 
 class Thumbinator extends Actor {
   import actors.Thumbinator._
 
-  def generateThumb(image: ByteString, width: Int, height: Int): Array[Byte] = ???
+  def generateThumb(image: ByteString, width: Int, height: Int): Array[Byte] = {
+    Image(image.toArray).fit(width, height).write
+  }
 
   def receive = {
     case Large(image) =>
