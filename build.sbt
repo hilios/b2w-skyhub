@@ -13,6 +13,7 @@ git.formattedShaVersion := git.gitHeadCommit.value map(sha => s"${sha.substring(
 libraryDependencies ++= Seq(
   ws,
   filters,
+  "com.sksamuel.scrimage" %% "scrimage" % "1.4.2",
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.0.0",
   "org.mockito" % "mockito-core" % "2.7.22" % Test,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
