@@ -1,5 +1,9 @@
 # SkyHub challenge
 
+```shell
+$ docker run -p 27017:27017 -d mongo -vvv --noauth --bind_ip 0.0.0.0
+```
+
 #### Resize photos
 
 Your mission:

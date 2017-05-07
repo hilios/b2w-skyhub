@@ -3,6 +3,5 @@
 # ~~~~
 
 GET     /ops        controllers.OpsController.read
-
-GET     /photos     controllers.PhotosController.read
-PUT     /photos     controllers.PhotosController.update
+GET     /images     controllers.ImagesController.read
+PUT     /images     controllers.ImagesController.update
