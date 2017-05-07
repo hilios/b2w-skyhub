@@ -25,7 +25,7 @@ class ImageProcessor @Inject()(images: ImagesService,
     case Fetch(url) =>
       log.info(s"Fetching image: $url")
       imagesDAO.findByUrl(url).andThen {
-        case Success(image) =>
+        case Success(_) =>
           log.info(s"Image $url already exists")
 
         case Failure(_) =>
