@@ -7,6 +7,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import dao.ImagesDAO
 import models.Image
+import org.mongodb.scala.Completed
 import services.ImagesService
 
 import scala.concurrent.duration._
@@ -24,21 +25,27 @@ class ImageProcessor @Inject()(images: ImagesService,
   def receive = {
     case Fetch(url) =>
       log.info(s"Fetching image: $url")
-      imagesDAO.findByUrl(url).andThen {
-        case Success(_) =>
-          log.info(s"Image $url already exists")
+      imagesDAO.findByUrl(url) andThen {
+        case Success(img) =>
+          val image = Option(img)
+          if (image.isEmpty) {
+            for {
+              image <- images.load(url)
+              sm <- (thumb ? Small(image)).mapTo[Array[Byte]]
+              lg <- (thumb ? Large(image)).mapTo[Array[Byte]]
+              md <- (thumb ? Medium(image)).mapTo[Array[Byte]]
+            } yield {
+              log.info(s"New image $url")
+              val img = Image(url, sm, md, lg)
+              imagesDAO.insert(img).subscribe(
+                (c: Completed) => log.info(s"Inserted new image $url"))
+            }
+          } else {
+            log.info(s"Image $url already exists")
+          }
 
         case Failure(_) =>
-          for {
-            image <- images.load(url)
-            sm <- (thumb ? Small(image)).mapTo[Array[Byte]]
-            lg <- (thumb ? Large(image)).mapTo[Array[Byte]]
-            md <- (thumb ? Medium(image)).mapTo[Array[Byte]]
-          } yield {
-            log.info(s"Insert new image $url")
-            val img = Image(url, sm, md, lg)
-            imagesDAO.insert(img)
-          }
+          log.info(s"DB Error: Could not find $url")
       }
   }
 }
