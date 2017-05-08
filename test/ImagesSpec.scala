@@ -1,8 +1,5 @@
 import java.nio.file.{Files, Paths}
 
-import actors.ImageProcessor.Fetch
-import akka.actor.ActorRef
-import akka.testkit.TestActors
 import com.sksamuel.scrimage.{Image => ScrImage}
 import dao.ImagesDAO
 import models.Image

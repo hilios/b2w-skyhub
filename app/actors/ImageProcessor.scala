@@ -13,15 +13,18 @@ import services.ImagesService
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
-class ImageProcessor @Inject()(images: ImagesService,
+class ImageProcessor @Inject()(@Named("thumbs") thumb: ActorRef, images: ImagesService,
                                imagesDAO: ImagesDAO) extends Actor with ActorLogging {
   import ImageProcessor._
   import Thumbinator._
   import context.dispatcher
 
-  val thumb = context.actorOf(Thumbinator.props, "thumbinator")
   implicit val timeout: Timeout = 5.minutes
 
+  /**
+    * Fetch the image at given URL and generate thumbs for them, assuring the idempotency of the URL
+    * at the database to not process the same image more than once.
+    */
   def receive = {
     case Fetch(url) =>
       log.info(s"Fetching image: $url")
