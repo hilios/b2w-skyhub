@@ -5,4 +5,4 @@
 GET     /ops                            controllers.OpsController.read
 GET     /images                         controllers.ImagesController.list
 POST    /images                         controllers.ImagesController.create
-GET     /images/:id-:size.jpg           controllers.ImagesController.read(id: String, size: String)
+GET     /images/:id/:size.jpg           controllers.ImagesController.read(id: String, size: String)

@@ -29,9 +29,9 @@ class ImagesController @Inject()(@Named("image-processor") processor: ActorRef,
         Json.obj(
           "_id" -> objectId,
           "url" -> image.url,
-          "small" -> s"$baseUrl/images/${objectId}-s.jpg",
-          "medium" -> s"$baseUrl/images/${objectId}-m.jpg",
-          "large" -> s"$baseUrl/images/${objectId}-l.jpg"
+          "small" -> s"$baseUrl/images/${objectId}/small.jpg",
+          "medium" -> s"$baseUrl/images/${objectId}/medium.jpg",
+          "large" -> s"$baseUrl/images/${objectId}/large.jpg"
         )
       }
     }
@@ -53,9 +53,9 @@ class ImagesController @Inject()(@Named("image-processor") processor: ActorRef,
     val objectId = new ObjectId(id)
     imagesDAO.findById(objectId).map { image =>
       val thumb = size match {
-        case "s" => Some(image.small)
-        case "m" => Some(image.medium)
-        case "l" => Some(image.large)
+        case "small" => Some(image.small)
+        case "medium" => Some(image.medium)
+        case "large" => Some(image.large)
         case _ => None
       }
       thumb match {
