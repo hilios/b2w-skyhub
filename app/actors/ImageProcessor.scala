@@ -28,20 +28,23 @@ class ImageProcessor @Inject()(@Named("thumbs") thumb: ActorRef, images: ImagesS
   def receive = {
     case Fetch(url) =>
       log.info(s"Fetching image: $url")
-      imagesDAO.findByUrl(url) andThen {
-        case Success(img) =>
-          val image = Option(img)
+      imagesDAO.findByUrl(url).map(Option(_)) andThen {
+        case Success(image) =>
           if (image.isEmpty) {
             for {
-              image <- images.load(url)
-              sm <- (thumb ? Small(image)).mapTo[Array[Byte]]
-              lg <- (thumb ? Large(image)).mapTo[Array[Byte]]
-              md <- (thumb ? Medium(image)).mapTo[Array[Byte]]
+              img <- images.load(url)
+              sm <- (thumb ? Small(img)).mapTo[Array[Byte]]
+              lg <- (thumb ? Large(img)).mapTo[Array[Byte]]
+              md <- (thumb ? Medium(img)).mapTo[Array[Byte]]
             } yield {
               log.info(s"New image $url")
               val img = Image(url, sm, md, lg)
-              imagesDAO.insert(img).subscribe(
-                (c: Completed) => log.info(s"Inserted new image $url"))
+              imagesDAO.insert(img).onComplete {
+                case Success(_) =>
+                  log.info(s"Inserted new image $url")
+                case Failure(_) =>
+                  log.warning(s"Could not insert $url")
+              }
             }
           } else {
             log.info(s"Image $url already exists")

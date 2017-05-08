@@ -20,5 +20,5 @@ class ImagesDAO @Inject()(mongo: MongoService) {
   def findByUrl(url: String) = raw.find(equal("url", url))
     .projection(exclude("small", "medium", "large")).first().toFuture()
 
-  def insert(images: Image*) = collection.insertMany(images)
+  def insert(images: Image*) = collection.insertMany(images).toFuture()
 }

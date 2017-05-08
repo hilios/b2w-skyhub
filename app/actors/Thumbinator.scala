@@ -5,7 +5,7 @@ import akka.util.ByteString
 import com.sksamuel.scrimage.Image
 
 class Thumbinator extends Actor {
-  import actors.Thumbinator._
+  import Thumbinator._
 
   def generateThumb(image: ByteString, width: Int, height: Int): Array[Byte] = {
     Image(image.toArray).fit(width, height).write
