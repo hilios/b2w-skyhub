@@ -1,12 +1,12 @@
 # SkyHub challenge
 
-A simple API to resize photos written in scala.
+A simple API to resize images written in Scala + PlayFramework + Akka.
 
 **Why Scala?**
 
 Because it is a modern, elegant and very-fast programming language based on the JVM, allowing easy integration with all legacy enterprise solutions writen in Java.
 
-For this challenge Scala really shines. It process each images asynchronously through the actor system, each image is downloaded and resized in parallel and without blocking the request.
+For this challenge Scala really shines. It process the images asynchronously through the actor system, each file is downloaded and resized in parallel and without blocking the request.
 
 ## API documentation
 
@@ -48,7 +48,7 @@ $ docker run -p 27017:27017 -d mongo -vvv --noauth --bind_ip 0.0.0.0
 Then run the server passing the `MONGO_URL` environment variable:
 
 ```shell
-$  MONGO_URL="mongodb://127.0.0.1" sbt testProd
+$ MONGO_URL="mongodb://127.0.0.1" sbt testProd
 ...
 
 (Starting server. Type Ctrl+D to exit logs, the server will remain in background)
