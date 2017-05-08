@@ -19,3 +19,6 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
   "com.typesafe.akka" %% "akka-testkit" % "2.5.1" % Test
 )
+
+logBuffered in Test := false
+

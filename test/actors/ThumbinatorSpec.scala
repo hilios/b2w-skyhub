@@ -21,7 +21,6 @@ class ThumbinatorSpec extends ActorSpec {
     "return the given image resized to 320x240" in {
       val image = (thumbs ? Small(img)).mapTo[Array[Byte]]
       val small = Await.result(image, 10.seconds)
-
       val thumb = Image(small)
       thumb.width mustBe 320
       thumb.height mustBe 240
@@ -32,7 +31,6 @@ class ThumbinatorSpec extends ActorSpec {
     "return the given image resized to 384x288" in {
       val image = (thumbs ? Medium(img)).mapTo[Array[Byte]]
       val small = Await.result(image, 10.seconds)
-
       val thumb = Image(small)
       thumb.width mustBe 384
       thumb.height mustBe 288
@@ -43,7 +41,6 @@ class ThumbinatorSpec extends ActorSpec {
     "return the given image resized to 640x480" in {
       val image = (thumbs ? Large(img)).mapTo[Array[Byte]]
       val small = Await.result(image, 10.seconds)
-
       val thumb = Image(small)
       thumb.width mustBe 640
       thumb.height mustBe 480

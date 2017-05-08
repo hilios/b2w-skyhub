@@ -58,7 +58,7 @@ $  MONGO_URL="mongodb://127.0.0.1" sbt testProd
 [info] play.api.Play - Application started (Prod)
 ```
 
-This will compile the source code and start the web server at [http://localhost:9000](http://localhost:9000). 
+This will compile the source code and start the web server at [http://localhost:9000](http://localhost:9000).
 
 ### Tests
 
@@ -68,11 +68,23 @@ You can run the test through the [SBT](http://www.scala-sbt.org/release/docs/Set
 $ sbt test
 [info] Loading project definition from /b2w-skyhub/project
 [info] Set current project to b2w-skyhub (in build file:/b2w-skyhub/)
+[info] ThumbinatorSpec:
+[info] Small(image)
+[info] - should return the given image resized to 320x240
+[info] Medium(image)
+[info] - should return the given image resized to 384x288
+[info] Large(image)
+[info] - should return the given image resized to 640x480
 [info] ApplicationSpec:
-[info] OpsController
+[info] GET /ops
 [info] - should render the version
-[info] ErrorHandler
+[info] errors
 [info] - should send not found on a bad request
+[info] ImageProcessorSpec:
+[info] Fetch(url)
+[info] - should retrieve the image from url and execute the side-effects if image is not yet processed
+[info] - should do nothing if image already exists
+[info] - should do nothing if image cannot be loaded
 [info] ImagesSpec:
 [info] GET /images
 [info] - should render all images and its thumbs address
@@ -80,15 +92,16 @@ $ sbt test
 [info] - should fetch process all images from the endpoint
 [info] GET /images/:id/:size.jpg
 [info] - should render a image thumb
+[info] - should return 404 when image does not exists
 [info] - should return 404 when image size does not exists
 [info] ScalaTest
-[info] Run completed in 1 minute.
-[info] Total number of tests run: 7
-[info] Suites: completed 2, aborted 0
-[info] Tests: succeeded 7, failed 0, canceled 0, ignored 0, pending 0
+[info] Run completed in 1 minute, 2 seconds.
+[info] Total number of tests run: 13
+[info] Suites: completed 4, aborted 0
+[info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0
 [info] All tests passed.
-[info] Passed: Total 7, Failed 0, Errors 0, Passed 7
-[success] Total time: 67 s, completed May 8, 2017 1:40:01 PM
+[info] Passed: Total 13, Failed 0, Errors 0, Passed 13
+[success] Total time: 68 s, completed May 8, 2017 4:42:45 PM
 ```
 
 ## Instructions

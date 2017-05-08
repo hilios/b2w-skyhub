@@ -7,13 +7,12 @@ import akka.pattern.ask
 import akka.util.Timeout
 import dao.ImagesDAO
 import models.Image
-import org.mongodb.scala.Completed
 import services.ImagesService
 
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
-class ImageProcessor @Inject()(@Named("thumbs") thumb: ActorRef, images: ImagesService,
+class ImageProcessor @Inject()(@Named("thumbinator") thumb: ActorRef, images: ImagesService,
                                imagesDAO: ImagesDAO) extends Actor with ActorLogging {
   import ImageProcessor._
   import Thumbinator._

@@ -1,6 +1,9 @@
 import java.nio.file.{Files, Paths}
 
-import com.sksamuel.scrimage.{Image => ScrImage}
+import actors.ActorSpec
+import actors.ImageProcessor.Fetch
+import akka.actor.{ActorRef, ActorSystem}
+import akka.testkit.TestProbe
 import dao.ImagesDAO
 import models.Image
 import org.bson.types.ObjectId
@@ -16,10 +19,13 @@ import play.api.test.Helpers._
 import services.ImagesService
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
-class ImagesSpec extends PlaySpec with OneAppPerTest with MockitoSugar {
+class ImagesSpec extends ActorSpec with OneAppPerTest with MockitoSugar {
   val imagesService = mock[ImagesService]
-  when(imagesService.all) thenReturn Future.successful(Seq.empty)
+  when(imagesService.all) thenReturn Future.successful(Seq(
+    "http://host.com/a.jpg", "http://host.com/b.jpg"
+  ))
 
   val idA = new ObjectId()
   val idB = new ObjectId()
@@ -37,10 +43,15 @@ class ImagesSpec extends PlaySpec with OneAppPerTest with MockitoSugar {
   val fakeId = new ObjectId()
   when(imagesDAO.findById(fakeId)) thenReturn Future.successful(null)
 
+  val probe = TestProbe()
+
   override def newAppForTest(testData: TestData): Application = {
     new GuiceApplicationBuilder()
       .overrides(bind[ImagesService].to(imagesService))
       .overrides(bind[ImagesDAO].to(imagesDAO))
+      .overrides(bind[ActorSystem].to(system))
+      .overrides(bind[ActorRef].qualifiedWith("thumbinator").to(probe.ref))
+      .overrides(bind[ActorRef].qualifiedWith("image-processor").to(probe.ref))
       .build()
   }
 
@@ -77,6 +88,11 @@ class ImagesSpec extends PlaySpec with OneAppPerTest with MockitoSugar {
 
       status(images) mustBe NO_CONTENT
       verify(imagesService).all()
+
+      within(1 second) {
+        probe.expectMsg(Fetch("http://host.com/a.jpg"))
+        probe.expectMsg(Fetch("http://host.com/b.jpg"))
+      }
     }
   }
 

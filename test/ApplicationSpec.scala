@@ -4,7 +4,7 @@ import play.api.test.Helpers._
 
 class ApplicationSpec extends PlaySpec with OneAppPerTest {
 
-  "OpsController" should {
+  "GET /ops" should {
     "render the version" in {
       val home = route(app, FakeRequest(GET, "/ops")).get
 
@@ -14,7 +14,7 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
     }
   }
 
-  "ErrorHandler" should {
+  "errors" should {
     "send not found on a bad request" in  {
       val error = route(app, FakeRequest(GET, "/bad")).get
 
