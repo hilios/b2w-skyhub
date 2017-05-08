@@ -12,9 +12,10 @@ For this challenge Scala really shines. It process each images asynchronously th
 
 | Method | Path | Description |
 | --- | --- | --- |
-| GET | /images | Returns all images and its thumbs. |
-| POST | /images | Fetch the images endpoint and generate a thumb to each image that was not processed. |
-| GET | /images/:id/:size.jpg | Returns the thumb for the given image. |
+| *GET* | `/ops` | Returns the application version. |
+| *GET* | `/images` | Returns all images and its thumbs. |
+| *POST* | `/images` | Fetch the images endpoint and generate a thumb to each image that was not processed. |
+| *GET* | `/images/:id/:size.jpg` | Returns the thumb for the given image. |
 
 #### Example
 
