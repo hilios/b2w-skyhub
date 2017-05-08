@@ -16,5 +16,6 @@ libraryDependencies ++= Seq(
   "com.sksamuel.scrimage" %% "scrimage-core" % "1.4.2",
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.0.0",
   "org.mockito" % "mockito-core" % "2.7.22" % Test,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+  "com.typesafe.akka" %% "akka-testkit" % "2.5.1" % Test
 )

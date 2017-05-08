@@ -17,8 +17,7 @@ import scala.util.Try
 
 @Singleton
 class ImagesController @Inject()(@Named("image-processor") processor: ActorRef,
-                                 images: ImagesService, imagesDAO: ImagesDAO,
-                                 config: Configuration)
+                                 images: ImagesService, imagesDAO: ImagesDAO)
                                 (implicit context: ExecutionContext) extends Controller {
 
   def list = Action.async { request =>

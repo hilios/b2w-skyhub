@@ -1,3 +1,9 @@
+import java.nio.file.{Files, Paths}
+
+import actors.ImageProcessor.Fetch
+import akka.actor.ActorRef
+import akka.testkit.TestActors
+import com.sksamuel.scrimage.{Image => ScrImage}
 import dao.ImagesDAO
 import models.Image
 import org.bson.types.ObjectId
@@ -11,18 +17,12 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.ImagesService
-import com.sksamuel.scrimage.{Image => ScrImage}
 
 import scala.concurrent.Future
-import scala.io.Source
-
-import java.nio.file.{Files, Paths}
 
 class ImagesSpec extends PlaySpec with OneAppPerTest with MockitoSugar {
   val imagesService = mock[ImagesService]
-  when(imagesService.all) thenReturn Future.successful {
-    Seq("http://host.com/a.jpg", "http://host.com/b.jpg")
-  }
+  when(imagesService.all) thenReturn Future.successful(Seq.empty)
 
   val idA = new ObjectId()
   val idB = new ObjectId()
@@ -75,8 +75,11 @@ class ImagesSpec extends PlaySpec with OneAppPerTest with MockitoSugar {
   }
 
   "POST /images" should {
-    "fetch process all images from the endpoint" ignore {
-      
+    "fetch process all images from the endpoint" in {
+      val images = route(app, FakeRequest(POST, "/images")).get
+
+      status(images) mustBe NO_CONTENT
+      verify(imagesService).all()
     }
   }
 
