@@ -13,6 +13,7 @@ import play.api.mvc._
 import services.ImagesService
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 @Singleton
 class ImagesController @Inject()(@Named("image-processor") processor: ActorRef,
@@ -50,22 +51,23 @@ class ImagesController @Inject()(@Named("image-processor") processor: ActorRef,
   }
 
   def read(id: String, size: String) = Action.async {
-    val objectId = new ObjectId(id)
-    imagesDAO.findById(objectId).map { image =>
-      val thumb = size match {
-        case "small" => Some(image.small)
-        case "medium" => Some(image.medium)
-        case "large" => Some(image.large)
+    val image = for {
+      objectId <- Future.fromTry(Try { new ObjectId(id) })
+      image <- imagesDAO.findById(objectId)
+    } yield Option(image)
+    // Select the right thumb size
+    image.map { image =>
+      size match {
+        case "small" => image.map(_.small)
+        case "medium" => image.map(_.medium)
+        case "large" => image.map(_.large)
         case _ => None
       }
-      thumb match {
-        case Some(x) =>
-          Ok(x).as("image/jpg")
-        case None =>
-          NotFound
-      }
-    } fallbackTo {
-      Future.successful(NotFound)
+    } map {
+      case Some(thumb) =>
+        Ok(thumb).as("image/jpg")
+      case None =>
+        NotFound
     }
   }
 }
